@@ -132,7 +132,10 @@ function execute(ast) {
     currentInstruction = currentInstruction.next;
   }
 
-  return stdout;
+  return {
+    context: context,
+    stdout: stdout
+  };
 }
 
 exports.linter = linter;

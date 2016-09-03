@@ -98,7 +98,10 @@ function execute(ast, stdinStr = "") {
     currentInstruction = currentInstruction.next;
   }
 
-  return stdout;
+  return {
+    context,
+    stdout
+  };
 }
 
 export { linter, parser, execute };
