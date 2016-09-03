@@ -87,6 +87,7 @@ function execute(ast, stdinStr = "") {
         break;
       case ".":
         stdout = stdout + String.fromCharCode(context.get());
+        break;
       case ",":
         const char = stdin.shift();
         if (char !== undefined) {

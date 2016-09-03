@@ -121,6 +121,7 @@ function execute(ast) {
         break;
       case ".":
         stdout = stdout + String.fromCharCode(context.get());
+        break;
       case ",":
         var char = stdin.shift();
         if (char !== undefined) {
