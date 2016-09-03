@@ -1,4 +1,5 @@
 import ExecutionContext from './ExecutionContext';
+import Immutable from 'immutable';
 
 // Take in a Brainfuck source code, check if there is any syntax error.
 function linter(code) {
@@ -58,6 +59,7 @@ function parser(code) {
 function executeSingleInstruction(context, instruction, stdin) {
   let stdout = "";
   let newContext = context;
+  let newStdin = stdin;
 
   switch (instruction.token) {
     case "+":
@@ -86,16 +88,17 @@ function executeSingleInstruction(context, instruction, stdin) {
       stdout = String.fromCharCode(context.getCurrentCell());
       break;
     case ",":
-      const char = stdin.shift();
+      const char = stdin.first();
+      newStdin = stdin.pop();
       if (char !== undefined) {
-        context.setCurrentCell(char.charCodeAt(0));
+        newContext = context.setCurrentCell(char.charCodeAt(0));
       }
   }
 
   instruction = instruction.next;
 
   return {
-    stdin,
+    stdin: newStdin,
     stdout,
     context: newContext,
     instruction
@@ -105,7 +108,7 @@ function executeSingleInstruction(context, instruction, stdin) {
 function execute(ast, stdinStr = "") {
   let context = new ExecutionContext();
   let stdout = "";
-  let stdin = stdinStr.split('');
+  let stdin = new Immutable.Stack(stdinStr.split(''));
   let instruction = ast[0];
 
   while (instruction) {

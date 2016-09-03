@@ -9,6 +9,10 @@ var _ExecutionContext = require('./ExecutionContext');
 
 var _ExecutionContext2 = _interopRequireDefault(_ExecutionContext);
 
+var _immutable = require('immutable');
+
+var _immutable2 = _interopRequireDefault(_immutable);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 // Take in a Brainfuck source code, check if there is any syntax error.
@@ -90,6 +94,7 @@ function parser(code) {
 function executeSingleInstruction(context, instruction, stdin) {
   var stdout = "";
   var newContext = context;
+  var newStdin = stdin;
 
   switch (instruction.token) {
     case "+":
@@ -118,16 +123,17 @@ function executeSingleInstruction(context, instruction, stdin) {
       stdout = String.fromCharCode(context.getCurrentCell());
       break;
     case ",":
-      var char = stdin.shift();
+      var char = stdin.first();
+      newStdin = stdin.pop();
       if (char !== undefined) {
-        context.setCurrentCell(char.charCodeAt(0));
+        newContext = context.setCurrentCell(char.charCodeAt(0));
       }
   }
 
   instruction = instruction.next;
 
   return {
-    stdin: stdin,
+    stdin: newStdin,
     stdout: stdout,
     context: newContext,
     instruction: instruction
@@ -139,7 +145,7 @@ function execute(ast) {
 
   var context = new _ExecutionContext2.default();
   var stdout = "";
-  var stdin = stdinStr.split('');
+  var stdin = new _immutable2.default.Stack(stdinStr.split(''));
   var instruction = ast[0];
 
   while (instruction) {
