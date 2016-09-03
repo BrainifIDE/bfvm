@@ -89,19 +89,20 @@ function parser(code) {
 
 function executeSingleInstruction(context, instruction, stdin) {
   var stdout = "";
+  var newContext = context;
 
   switch (instruction.token) {
     case "+":
-      context.increment();
+      newContext = context.increment();
       break;
     case "-":
-      context.decrement();
+      newContext = context.decrement();
       break;
     case ">":
-      context.forward();
+      newContext = context.forward();
       break;
     case "<":
-      context.backward();
+      newContext = context.backward();
       break;
     case "[":
       if (context.get() === 0) {
@@ -128,7 +129,7 @@ function executeSingleInstruction(context, instruction, stdin) {
   return {
     stdin: stdin,
     stdout: stdout,
-    context: context,
+    context: newContext,
     instruction: instruction
   };
 }
@@ -146,6 +147,7 @@ function execute(ast) {
     stdout += results.stdout;
     stdin = results.stdin;
     instruction = results.instruction;
+    context = results.context;
   }
 
   return {
@@ -172,6 +174,7 @@ function executeStep(ast) {
       stdout += results.stdout;
       stdin = results.stdin;
       instruction = results.instruction;
+      context = results.context;
     }
 
     cb(context, stdout, instruction);

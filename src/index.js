@@ -57,19 +57,20 @@ function parser(code) {
 
 function executeSingleInstruction(context, instruction, stdin) {
   let stdout = "";
+  let newContext = context;
 
   switch (instruction.token) {
     case "+":
-      context.increment();
+      newContext = context.increment();
       break;
     case "-":
-      context.decrement();
+      newContext = context.decrement();
       break;
     case ">":
-      context.forward();
+      newContext = context.forward();
       break;
     case "<":
-      context.backward();
+      newContext = context.backward();
       break;
     case "[":
       if (context.get() === 0) {
@@ -96,13 +97,13 @@ function executeSingleInstruction(context, instruction, stdin) {
   return {
     stdin,
     stdout,
-    context,
+    context: newContext,
     instruction
   };
 }
 
 function execute(ast, stdinStr = "") {
-  const context = new ExecutionContext();
+  let context = new ExecutionContext();
   let stdout = "";
   let stdin = stdinStr.split('');
   let instruction = ast[0];
@@ -112,6 +113,7 @@ function execute(ast, stdinStr = "") {
     stdout += results.stdout;
     stdin = results.stdin;
     instruction = results.instruction;
+    context = results.context;
   }
 
   return {
@@ -125,7 +127,7 @@ function execute(ast, stdinStr = "") {
 // stepper((context, stdout, instruction) => {
 // }); // Execute 1 instruction
 function executeStep(ast, stdinStr = "") {
-  const context = new ExecutionContext();
+  let context = new ExecutionContext();
   let stdout = "";
   let stdin = stdinStr.split('');
   let instruction = ast[0];
@@ -136,6 +138,7 @@ function executeStep(ast, stdinStr = "") {
       stdout += results.stdout;
       stdin = results.stdin;
       instruction = results.instruction;
+      context = results.context;
     }
 
     cb(context, stdout, instruction);

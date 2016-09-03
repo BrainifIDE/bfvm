@@ -1,31 +1,33 @@
-class ExecutionContext {
-  constructor(stdinStr) {
-    this.table = {};
-    this.pointer = 0;
-  }
+import Immutable from 'immutable';
 
+const BaseExecutionContext = new Immutable.Record({
+  table: new Immutable.Map(),
+  pointer: 0
+});
+
+class ExecutionContext extends BaseExecutionContext {
   forward() {
-    this.pointer++;
+    return this.set('pointer', this.pointer + 1);
   }
 
   backward() {
-    this.pointer--;
+    return this.set('pointer', this.pointer - 1);
   }
 
   increment() {
-    this.set(this.get() + 1);
+    return this.setCurrentCell(this.getCurrentCell() + 1);
   }
 
   decrement() {
-    this.set(this.get() - 1);
+    return this.setCurrentCell(this.getCurrentCell() - 1);
   }
 
-  get() {
-    return this.table[this.pointer] || 0;
+  getCurrentCell() {
+    return this.table.get(this.pointer) || 0;
   }
 
-  set(val) {
-    this.table[this.pointer] = val;
+  setCurrentCell(val) {
+    return this.setIn(['table', this.pointer], val);
   }
 }
 
