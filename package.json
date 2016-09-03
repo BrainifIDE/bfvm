@@ -1,6 +1,6 @@
 {
   "name": "bfvm",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Brainfuck Virtual Machine",
   "main": "dist/index.js",
   "scripts": {

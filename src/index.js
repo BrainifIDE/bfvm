@@ -73,22 +73,22 @@ function executeSingleInstruction(context, instruction, stdin) {
       newContext = context.backward();
       break;
     case "[":
-      if (context.get() === 0) {
+      if (context.getCurrentCell() === 0) {
         instruction = instruction.counterpart;
       }
       break;
     case "]":
-      if (context.get() !== 0) {
+      if (context.getCurrentCell() !== 0) {
         instruction = instruction.counterpart;
       }
       break;
     case ".":
-      stdout = String.fromCharCode(context.get());
+      stdout = String.fromCharCode(context.getCurrentCell());
       break;
     case ",":
       const char = stdin.shift();
       if (char !== undefined) {
-        context.set(char.charCodeAt(0));
+        context.setCurrentCell(char.charCodeAt(0));
       }
   }
 
@@ -145,4 +145,4 @@ function executeStep(ast, stdinStr = "") {
   };
 }
 
-export { linter, parser, execute, executeStep };
+export { linter, parser, execute, executeStep, executeSingleInstruction, ExecutionContext };

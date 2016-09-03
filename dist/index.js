@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.executeStep = exports.execute = exports.parser = exports.linter = undefined;
+exports.ExecutionContext = exports.executeSingleInstruction = exports.executeStep = exports.execute = exports.parser = exports.linter = undefined;
 
 var _ExecutionContext = require('./ExecutionContext');
 
@@ -105,22 +105,22 @@ function executeSingleInstruction(context, instruction, stdin) {
       newContext = context.backward();
       break;
     case "[":
-      if (context.get() === 0) {
+      if (context.getCurrentCell() === 0) {
         instruction = instruction.counterpart;
       }
       break;
     case "]":
-      if (context.get() !== 0) {
+      if (context.getCurrentCell() !== 0) {
         instruction = instruction.counterpart;
       }
       break;
     case ".":
-      stdout = String.fromCharCode(context.get());
+      stdout = String.fromCharCode(context.getCurrentCell());
       break;
     case ",":
       var char = stdin.shift();
       if (char !== undefined) {
-        context.set(char.charCodeAt(0));
+        context.setCurrentCell(char.charCodeAt(0));
       }
   }
 
@@ -185,3 +185,5 @@ exports.linter = linter;
 exports.parser = parser;
 exports.execute = execute;
 exports.executeStep = executeStep;
+exports.executeSingleInstruction = executeSingleInstruction;
+exports.ExecutionContext = _ExecutionContext2.default;
