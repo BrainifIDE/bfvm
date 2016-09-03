@@ -1,0 +1,19 @@
+{
+  "name": "bfvm",
+  "version": "1.0.0",
+  "description": "Brainfuck Virtual Machine",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/sg-fb-hackathon/bfvm.git"
+  },
+  "author": "Yihang Ho <hoyihang5@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://gitlab.com/sg-fb-hackathon/bfvm/issues"
+  },
+  "homepage": "https://gitlab.com/sg-fb-hackathon/bfvm#README"
+}
