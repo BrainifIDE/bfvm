@@ -154,6 +154,39 @@ function execute(ast) {
   };
 }
 
+// Example
+// const stepper = executeStep(ast, stdinStr);
+// stepper((context, stdout, instruction) => {
+// }); // Execute 1 instruction
+function executeStep(ast) {
+  var stdinStr = arguments.length <= 1 || arguments[1] === undefined ? "" : arguments[1];
+
+  var context = new _ExecutionContext2.default();
+  var stdout = "";
+  var stdin = stdinStr.split('');
+  var instruction = ast[0];
+
+  return function (cb) {
+    if (instruction) {
+      var results = executeSingleInstruction(context, instruction, stdin);
+      stdout += results.stdout;
+      stdin = results.stdin;
+      instruction = results.instruction;
+    }
+
+    cb(context, stdout, instruction);
+  };
+}
+
+var ast = parser("+++");
+var stepper = executeStep(ast);
+var callback = function callback(a, b, c) {
+  return console.log(a, b, c);
+};
+stepper(callback);
+stepper(callback);
+stepper(callback);
+
 exports.linter = linter;
 exports.parser = parser;
 exports.execute = execute;

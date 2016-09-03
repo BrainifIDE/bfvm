@@ -120,4 +120,26 @@ function execute(ast, stdinStr = "") {
   };
 }
 
-export { linter, parser, execute };
+// Example
+// const stepper = executeStep(ast, stdinStr);
+// stepper((context, stdout, instruction) => {
+// }); // Execute 1 instruction
+function executeStep(ast, stdinStr = "") {
+  const context = new ExecutionContext();
+  let stdout = "";
+  let stdin = stdinStr.split('');
+  let instruction = ast[0];
+
+  return (cb) => {
+    if (instruction) {
+      const results = executeSingleInstruction(context, instruction, stdin);
+      stdout += results.stdout;
+      stdin = results.stdin;
+      instruction = results.instruction;
+    }
+
+    cb(context, stdout, instruction);
+  };
+}
+
+export { linter, parser, execute, executeStep };
