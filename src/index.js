@@ -55,47 +55,63 @@ function parser(code) {
   return output;
 }
 
+function executeSingleInstruction(context, instruction, stdin) {
+  let stdout = "";
+
+  switch (instruction.token) {
+    case "+":
+      context.increment();
+      break;
+    case "-":
+      context.decrement();
+      break;
+    case ">":
+      context.forward();
+      break;
+    case "<":
+      context.backward();
+      break;
+    case "[":
+      if (context.get() === 0) {
+        instruction = instruction.counterpart;
+      }
+      break;
+    case "]":
+      if (context.get() !== 0) {
+        instruction = instruction.counterpart;
+      }
+      break;
+    case ".":
+      stdout = String.fromCharCode(context.get());
+      break;
+    case ",":
+      const char = stdin.shift();
+      if (char !== undefined) {
+        context.set(char.charCodeAt(0));
+      }
+  }
+
+  instruction = instruction.next;
+
+  return {
+    stdin,
+    stdout,
+    context,
+    instruction
+  };
+}
+
 function execute(ast, stdinStr = "") {
   const context = new ExecutionContext();
   let stdout = "";
-  const stdin = stdinStr.split('');
-  let currentInstruction = ast[0];
+  let stdin = stdinStr.split('');
+  let instruction = ast[0];
 
-  while (currentInstruction) {
-    switch (currentInstruction.token) {
-      case "+":
-        context.increment();
-        break;
-      case "-":
-        context.decrement();
-        break;
-      case ">":
-        context.forward();
-        break;
-      case "<":
-        context.backward();
-        break;
-      case "[":
-        if (context.get() === 0) {
-          currentInstruction = currentInstruction.counterpart;
-        }
-        break;
-      case "]":
-        if (context.get() !== 0) {
-          currentInstruction = currentInstruction.counterpart;
-        }
-        break;
-      case ".":
-        stdout = stdout + String.fromCharCode(context.get());
-        break;
-      case ",":
-        const char = stdin.shift();
-        if (char !== undefined) {
-          context.set(char.charCodeAt(0));
-        }
-    }
-
-    currentInstruction = currentInstruction.next;
+  while (instruction) {
+    const results = executeSingleInstruction(context, instruction, stdin);
+    stdout += results.stdout;
+    stdin = results.stdin;
+    instruction = results.instruction;
   }
 
   return {

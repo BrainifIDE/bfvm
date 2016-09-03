@@ -1,5 +1,5 @@
 class ExecutionContext {
-  constructor() {
+  constructor(stdinStr) {
     this.table = {};
     this.pointer = 0;
   }
