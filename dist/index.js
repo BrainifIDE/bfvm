@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.execute = exports.parser = exports.linter = undefined;
+exports.executeStep = exports.execute = exports.parser = exports.linter = undefined;
 
 var _ExecutionContext = require('./ExecutionContext');
 
@@ -178,15 +178,7 @@ function executeStep(ast) {
   };
 }
 
-var ast = parser("+++");
-var stepper = executeStep(ast);
-var callback = function callback(a, b, c) {
-  return console.log(a, b, c);
-};
-stepper(callback);
-stepper(callback);
-stepper(callback);
-
 exports.linter = linter;
 exports.parser = parser;
 exports.execute = execute;
+exports.executeStep = executeStep;
