@@ -99,3 +99,5 @@ function execute(ast, stdinStr = "") {
 
   return stdout;
 }
+
+export { linter, parser, execute };
